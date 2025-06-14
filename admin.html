@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MBBS Admin Panel 👩‍⚕️</title>
+  <style>
+    body {
+      background-color: #1a001f;
+      color: #ff00ff;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      padding: 40px;
+    }
+    input[type="password"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 250px;
+      background: #330033;
+      color: #ff00ff;
+      border: 2px solid #ff00ff;
+      border-radius: 5px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #ff00ff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .message {
+      background-color: #330033;
+      border: 1px solid #ff00ff;
+      margin: 10px auto;
+      padding: 15px;
+      width: 80%;
+      text-align: left;
+      border-radius: 8px;
+    }
+    #adminPanel {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🔐 MBBS Anonymous Admin Panel</h1>
+
+  <div id="login">
+    <p>Enter Admin Password:</p>
+    <input type="password" id="passwordInput" placeholder="••••••••"><br>
+    <button onclick="checkPassword()">Unlock</button>
+  </div>
+
+  <div id="adminPanel">
+    <h2>📨 Anonymous Messages</h2>
+    <div id="messageList">Loading...</div>
+  </div>
+
+  <script>
+    const correctPassword = "mbbsSecret";
+
+    function checkPassword() {
+      const input = document.getElementById("passwordInput").value;
+      if (input === correctPassword) {
+        document.getElementById("login").style.display = "none";
+        document.getElementById("adminPanel").style.display = "block";
+        loadMessages();
+      } else {
+        alert("❌ Access Denied! Wrong password.");
+      }
+    }
+
+    function loadMessages() {
+      const container = document.getElementById("messageList");
+      const messages = JSON.parse(localStorage.getItem("anonyMessages") || "[]");
+      container.innerHTML = "";
+
+      if (messages.length === 0) {
+        container.innerHTML = "<p>No messages yet 💭</p>";
+      } else {
+        messages.forEach(msg => {
+          const box = `
+            <div class="message">
+              <p><strong>${msg.name}</strong>: ${msg.text}</p>
+              <small>🕒 ${msg.fingerprint.timestamp}</small><br>
+              <small>💻 Platform: ${msg.fingerprint.platform}, ${msg.fingerprint.screenSize}</small><br>
+              <small>🌐 Browser: ${msg.fingerprint.userAgent}</small><br>
+              <small>🌎 Language: ${msg.fingerprint.language}</small>
+            </div>
+          `;
+          container.innerHTML += box;
+        });
+      }
+    }
+  </script>
+
+</body>
+</html>

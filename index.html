@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MBBS Anonymous 💬</title>
+  <style>
+    body {
+      background-color: #1a001f;
+      color: #ff00ff;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      padding: 30px;
+    }
+    h1 {
+      font-size: 2.5em;
+      text-shadow: 0 0 10px #ff00ff;
+    }
+    textarea, input[type="text"] {
+      width: 80%;
+      max-width: 400px;
+      margin: 10px auto;
+      padding: 10px;
+      font-size: 1em;
+      border: 2px solid #ff00ff;
+      background: #330033;
+      color: #ff00ff;
+      border-radius: 5px;
+      display: block;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: #ff00ff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    .logo {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: magenta;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo">🩺 MBBS Anonymous 🧠</div>
+  <h1>Send a Secret Message 👀</h1>
+  <form onsubmit="saveMessage(); return false;">
+    <input type="text" id="anonName" placeholder="Optional: Anonymous name">
+    <textarea id="anonMsg" rows="5" placeholder="Type your message here..."></textarea>
+    <button type="submit">Send ✉️</button>
+  </form>
+
+  <p style="margin-top: 40px;">Your message is anonymous. We swear... 👀</p>
+
+  <script>
+    function getFingerprint() {
+      return {
+        userAgent: navigator.userAgent,
+        platform: navigator.platform,
+        screenSize: `${window.screen.width}x${window.screen.height}`,
+        language: navigator.language,
+        timestamp: new Date().toLocaleString()
+      };
+    }
+
+    function saveMessage() {
+      const name = document.getElementById("anonName").value;
+      const msg = document.getElementById("anonMsg").value;
+      if (!msg) {
+        alert("Message cannot be empty 👀");
+        return;
+      }
+
+      const fingerprint = getFingerprint();
+
+      let messages = JSON.parse(localStorage.getItem("anonyMessages") || "[]");
+      messages.unshift({
+        name: name || "Anonymous",
+        text: msg,
+        fingerprint: fingerprint
+      });
+
+      localStorage.setItem("anonyMessages", JSON.stringify(messages));
+      alert("✅ Message sent anonymously.");
+      document.getElementById("anonName").value = "";
+      document.getElementById("anonMsg").value = "";
+    }
+  </script>
+</body>
+</html>
